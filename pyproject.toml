@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rrg-monitor"
+version = "0.1.0"
+description = "Interactive Relative Rotation Graph monitor — JdK RS-Ratio / RS-Momentum engine and static dashboard."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Brett Lill" }]
+dependencies = [
+    "pandas>=2.0",
+    "numpy>=1.24",
+    "yfinance>=0.2.40",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "jsonschema>=4.0"]
+
+[tool.setuptools]
+packages = ["rrg"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
