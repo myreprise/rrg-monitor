@@ -6,7 +6,7 @@ GitHub Pages and refreshed automatically every week.
 
 > **Status:** 🚧 Phase 0 (scaffold). The live visualization ships in a later phase.
 
-<!-- Once deployed:  **▶ Live site: https://brettlill.github.io/rrg-monitor/** -->
+**▶ Live site: https://myreprise.github.io/rrg-monitor/**
 
 ---
 
