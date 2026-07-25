@@ -50,6 +50,21 @@
       </aside>
     </main>
 
+    <section class="card timeline-card" id="timeline" hidden aria-labelledby="tl-h">
+      <div class="card-head">
+        <h2 id="tl-h">Timeline</h2>
+        <span class="card-note">drag the strip or scrub to move through history</span>
+      </div>
+      <div class="transport">
+        <button id="play" class="play-btn" aria-label="Play animation" title="Play">▶</button>
+        <input id="slider" class="slider" type="range" min="0" max="0" value="0" step="1" aria-label="Week" />
+        <span class="week-label" id="week-label">—</span>
+      </div>
+      <svg id="spy" viewBox="0 0 920 120" role="img" aria-label="Benchmark price over time with market-regime shading and a playhead"></svg>
+      <div class="hm-head"><span>Rotation heatmap</span><span class="card-note">each row a security · color = quadrant that week</span></div>
+      <svg id="heat" viewBox="0 0 920 250" role="img" aria-label="Rotation heatmap: each security's quadrant, week by week"></svg>
+    </section>
+
     <div class="legend" id="legend" hidden>
       <span class="legend-item"><i data-q="Leading"></i>Leading</span>
       <span class="legend-item"><i data-q="Improving"></i>Improving</span>
