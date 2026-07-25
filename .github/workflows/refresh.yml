@@ -1,0 +1,45 @@
+name: Refresh RRG data
+
+# Weekly refresh after the US Friday close. RRG is computed on weekly bars,
+# so a weekly cadence matches the methodology. Manual runs via the Actions tab.
+on:
+  schedule:
+    - cron: "0 22 * * 5"   # Fridays 22:00 UTC (~after US market close)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-rrg
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # Implemented in Phase 1 — regenerates docs/data/<universe>.json
+      - name: Export RRG data
+        run: python -m rrg.export
+
+      - name: Commit refreshed data
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/data
+          if git diff --staged --quiet; then
+            echo "No data changes."
+          else
+            git commit -m "chore: weekly RRG data refresh"
+            git push
+          fi

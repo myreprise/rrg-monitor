@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "universe": {
+    "id": "sectors",
+    "label": "SPDR Sectors",
+    "benchmark": "SPY",
+    "description": "The 11 S&P 500 sector SPDR ETFs, rotated against the S&P 500."
+  },
+  "generated_utc": "2026-07-25T22:00:00Z",
+  "params": { "weeks": 156, "tail": 3, "rs_ratio_ema": 52, "momentum_roc": 4 },
+  "dates": ["2026-07-10", "2026-07-17", "2026-07-24"],
+  "benchmark_series": {
+    "close": [552.10, 556.40, 559.85],
+    "regime": ["bull", "bull", "bull"]
+  },
+  "securities": [
+    {
+      "ticker": "XLK",
+      "name": "Technology",
+      "rs_ratio": [104.1, 104.9, 105.5],
+      "rs_momentum": [101.9, 102.5, 103.0],
+      "quadrant": ["Leading", "Leading", "Leading"]
+    },
+    {
+      "ticker": "XLE",
+      "name": "Energy",
+      "rs_ratio": [97.3, 96.8, 96.4],
+      "rs_momentum": [98.3, 97.8, 97.4],
+      "quadrant": ["Lagging", "Lagging", "Lagging"]
+    }
+  ]
+}

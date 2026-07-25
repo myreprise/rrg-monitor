@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://brettlill.github.io/rrg-monitor/data/schema.json",
+  "title": "RRG Monitor universe data",
+  "description": "Column-oriented, playhead-indexable snapshot of one RRG universe. Every per-security array and every benchmark_series array is aligned 1:1 with `dates` (same length, ascending). The front-end indexes all views by a single time cursor into `dates`. FROZEN v1.0 (Phase 0, 2026-07-25).",
+  "type": "object",
+  "required": ["schema_version", "universe", "generated_utc", "params", "dates", "benchmark_series", "securities"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "universe": {
+      "type": "object",
+      "required": ["id", "label", "benchmark"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "description": "Slug matching the universes.yaml key and the file name (<id>.json)." },
+        "label": { "type": "string", "description": "Human-readable universe name for the UI." },
+        "benchmark": { "type": "string", "description": "Ticker the RS metrics are computed against." },
+        "description": { "type": "string" }
+      }
+    },
+    "generated_utc": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC timestamp of the export run."
+    },
+    "params": {
+      "type": "object",
+      "description": "The JdK RS parameters used, echoed for transparency / the methodology panel.",
+      "required": ["weeks", "tail", "rs_ratio_ema", "momentum_roc"],
+      "properties": {
+        "weeks": { "type": "integer", "description": "Total weekly bars pulled for the computation." },
+        "tail": { "type": "integer", "description": "Number of most-recent weeks retained in `dates` / arrays (the visible window)." },
+        "rs_ratio_ema": { "type": "integer", "description": "EMA span used to normalize the RS line (default 52)." },
+        "momentum_roc": { "type": "integer", "description": "Rate-of-change lookback for RS-Momentum (default 4)." }
+      }
+    },
+    "dates": {
+      "type": "array",
+      "description": "Weekly dates, ascending, ISO-8601 (YYYY-MM-DD). Length T. The shared x-axis for every view.",
+      "items": { "type": "string", "format": "date" },
+      "minItems": 1
+    },
+    "benchmark_series": {
+      "type": "object",
+      "description": "Context series for the benchmark, driving the shared-time-axis strip.",
+      "required": ["close", "regime"],
+      "additionalProperties": false,
+      "properties": {
+        "close": {
+          "type": "array",
+          "description": "Benchmark close price, aligned to `dates` (length T).",
+          "items": { "type": ["number", "null"] }
+        },
+        "regime": {
+          "type": "array",
+          "description": "Market regime label per week, aligned to `dates` (length T). Drives the regime band behind the price strip.",
+          "items": { "type": "string", "enum": ["bull", "correction", "bear", "unknown"] }
+        }
+      }
+    },
+    "securities": {
+      "type": "array",
+      "description": "One entry per plotted security. Every metric array is aligned to `dates` (length T).",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["ticker", "rs_ratio", "rs_momentum", "quadrant"],
+        "additionalProperties": false,
+        "properties": {
+          "ticker": { "type": "string" },
+          "name": { "type": "string", "description": "Human-readable label (from universes.yaml names)." },
+          "rs_ratio": {
+            "type": "array",
+            "description": "JdK RS-Ratio, centered near 100. Length T.",
+            "items": { "type": ["number", "null"] }
+          },
+          "rs_momentum": {
+            "type": "array",
+            "description": "JdK RS-Momentum, centered near 100. Length T.",
+            "items": { "type": ["number", "null"] }
+          },
+          "quadrant": {
+            "type": "array",
+            "description": "Quadrant label per week, aligned to `dates` (length T). The shared color key across all views.",
+            "items": { "type": "string", "enum": ["Leading", "Weakening", "Lagging", "Improving", "unknown"] }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,61 @@
+# RRG Monitor — universe definitions
+#
+# Each universe is a set of securities measured against a single benchmark.
+# The exporter (rrg/export.py, Phase 1) reads this file and writes one
+# docs/data/<id>.json per universe, conforming to docs/data/schema.json.
+#
+# tickers : the securities plotted as dots on the RRG
+# benchmark : the reference the RS-Ratio / RS-Momentum are computed against
+# names : optional human-readable labels shown in tooltips / standings
+
+universes:
+  sectors:
+    label: "SPDR Sectors"
+    benchmark: SPY
+    description: "The 11 S&P 500 sector SPDR ETFs, rotated against the S&P 500."
+    tickers: [XLK, XLC, XLY, XLP, XLE, XLF, XLV, XLI, XLB, XLRE, XLU]
+    names:
+      XLK: "Technology"
+      XLC: "Communication Services"
+      XLY: "Consumer Discretionary"
+      XLP: "Consumer Staples"
+      XLE: "Energy"
+      XLF: "Financials"
+      XLV: "Health Care"
+      XLI: "Industrials"
+      XLB: "Materials"
+      XLRE: "Real Estate"
+      XLU: "Utilities"
+
+  mag7:
+    label: "Magnificent 7"
+    benchmark: SPY
+    description: "The seven mega-cap growth leaders, rotated against the S&P 500."
+    tickers: [AAPL, MSFT, NVDA, AMZN, GOOGL, META, TSLA]
+    names:
+      AAPL: "Apple"
+      MSFT: "Microsoft"
+      NVDA: "NVIDIA"
+      AMZN: "Amazon"
+      GOOGL: "Alphabet"
+      META: "Meta Platforms"
+      TSLA: "Tesla"
+
+  global:
+    label: "Global / Asset Classes"
+    # NOTE (Phase-0 sub-decision, unconfirmed): benchmark defaults to ACWI
+    # (MSCI All-Country World). Alternatives under review: SPY, or an
+    # equal-weight blend. Changing the benchmark changes what
+    # "leading / lagging" means for this view — confirm before launch.
+    benchmark: ACWI
+    description: "Major asset classes and regions, rotated against global equities (ACWI)."
+    tickers: [SPY, EFA, EEM, TLT, IEF, GLD, DBC, VNQ]
+    names:
+      SPY: "US Equities"
+      EFA: "Developed ex-US"
+      EEM: "Emerging Markets"
+      TLT: "Long Treasuries"
+      IEF: "Intermediate Treasuries"
+      GLD: "Gold"
+      DBC: "Broad Commodities"
+      VNQ: "US Real Estate"

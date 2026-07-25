@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local data cache (raw OHLCV pulls). The published, committed data lives
+# in docs/data/*.json — those are NOT ignored.
+data/raw/
+*.parquet
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
