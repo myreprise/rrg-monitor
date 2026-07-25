@@ -4,48 +4,68 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>RRG Monitor</title>
+  <meta name="description" content="Interactive Relative Rotation Graph tracking capital rotation across equity sectors and asset classes." />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>" />
-  <style>
-    :root { color-scheme: dark; }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; min-height: 100vh; display: grid; place-items: center;
-      background: #0d1117; color: #e6edf3;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-    .wrap { text-align: center; padding: 40px 24px; max-width: 640px; }
-    .badge {
-      display: inline-block; font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
-      color: #58a6ff; border: 1px solid #21344d; background: #0f1b2d;
-      padding: 5px 12px; border-radius: 20px; margin-bottom: 22px;
-    }
-    h1 { font-size: 34px; margin: 0 0 10px; }
-    .sub { color: #8b949e; font-size: 16px; line-height: 1.6; margin: 0 auto 28px; max-width: 34em; }
-    .quads { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 220px; margin: 0 auto 28px; }
-    .quads div { padding: 14px 8px; border-radius: 8px; font-size: 12px; font-weight: 600; }
-    .lead { background: rgba(63,185,80,.14); color: #3fb950; }
-    .impr { background: rgba(88,166,255,.14); color: #58a6ff; }
-    .weak { background: rgba(210,153,34,.16); color: #d29922; }
-    .lag  { background: rgba(248,81,73,.14); color: #f85149; }
-    .foot { color: #6e7681; font-size: 12px; }
-    a { color: #58a6ff; }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="wrap">
-    <span class="badge">Phase 0 · scaffolding</span>
-    <h1>🧭 RRG Monitor</h1>
-    <p class="sub">
-      An interactive, animated Relative Rotation Graph tracking how capital rotates
-      across equity sectors and asset classes. The visualization ships in a later phase.
-    </p>
-    <div class="quads" aria-hidden="true">
-      <div class="impr">Improving</div>
-      <div class="lead">Leading</div>
-      <div class="lag">Lagging</div>
-      <div class="weak">Weakening</div>
+  <div class="app">
+    <header class="masthead">
+      <div class="title">
+        <span class="mark">🧭</span>
+        <div>
+          <h1>RRG Monitor</h1>
+          <p class="tagline">Relative Rotation Graph — where capital is rotating</p>
+        </div>
+      </div>
+      <div class="meta" id="meta"><!-- universe · benchmark · regime · as-of (filled by JS) --></div>
+    </header>
+
+    <p id="status" class="status" role="status">Loading rotation data…</p>
+
+    <main class="layout" id="layout" hidden>
+      <section class="card chart-card" aria-labelledby="chart-h">
+        <div class="card-head">
+          <h2 id="chart-h">Relative Rotation Graph</h2>
+          <span class="card-note" id="chart-note"></span>
+        </div>
+        <p class="sr-only" id="chart-sr"></p>
+        <div class="chart-wrap">
+          <svg id="rrg" viewBox="0 0 560 560" role="img" aria-labelledby="chart-h chart-sr"></svg>
+          <div id="tooltip" class="tooltip" hidden></div>
+        </div>
+      </section>
+
+      <aside class="card standings-card" aria-labelledby="stand-h">
+        <div class="card-head">
+          <h2 id="stand-h">Standings</h2>
+          <span class="card-note">by RS-Ratio</span>
+        </div>
+        <table class="standings">
+          <thead>
+            <tr><th scope="col">Symbol</th><th scope="col" class="num">RS-Ratio</th><th scope="col" class="num">RS-Mom</th></tr>
+          </thead>
+          <tbody id="standings-body"></tbody>
+        </table>
+      </aside>
+    </main>
+
+    <div class="legend" id="legend" hidden>
+      <span class="legend-item"><i data-q="Leading"></i>Leading</span>
+      <span class="legend-item"><i data-q="Improving"></i>Improving</span>
+      <span class="legend-item"><i data-q="Weakening"></i>Weakening</span>
+      <span class="legend-item"><i data-q="Lagging"></i>Lagging</span>
+      <span class="legend-hint">Color = quadrant · position &amp; label = identity</span>
     </div>
-    <p class="foot">Static site · GitHub Pages · data refreshed weekly. Educational use only — not investment advice.</p>
-  </main>
+
+    <footer class="footer">
+      <p><strong>How to read it:</strong> the horizontal axis is relative <em>strength</em> (JdK RS-Ratio),
+      the vertical axis its <em>momentum</em> (JdK RS-Momentum), both vs the benchmark and centered at 100.
+      Capital tends to rotate clockwise: Improving → Leading → Weakening → Lagging.</p>
+      <p class="disclaimer">For educational and illustrative purposes only — not investment advice. Data via Yahoo Finance, refreshed weekly.</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
