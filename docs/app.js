@@ -22,6 +22,9 @@
   const VB = 560, PAD_L = 60, PAD_R = 26, PAD_T = 22, PAD_B = 50;
   const PLOT_W = VB - PAD_L - PAD_R, PLOT_H = VB - PAD_T - PAD_B;
   const STRIP_W = 920, S_L = 48, S_R = 16, STRIP_PLOT = STRIP_W - S_L - S_R;
+  // RRG is drawn as a true square (equal scale on both axes) centered on 100.
+  const cxp = PAD_L + PLOT_W / 2, cyp = PAD_T + PLOT_H / 2, RPIX = Math.min(PLOT_W, PLOT_H) / 2;
+  const MIN_DEV = 5, DEV_PAD = 0.12; // floor so a tight cluster can't over-zoom; padding margin
 
   const el = (tag, attrs = {}, parent = null) => {
     const n = document.createElementNS(SVGNS, tag);
@@ -35,7 +38,11 @@
 
   // ── module state ────────────────────────────────────────────────────────
   const cache = {};
-  let DATA, T, SECS, DATES, sx, sy, cxp, cyp;
+  let DATA, T, SECS, DATES;
+  // Square domain half-extent (RS units), refit each frame to the visible spread.
+  let curDev = 10;
+  const sx = (v) => cxp + ((v - 100) / curDev) * RPIX;
+  const sy = (v) => cyp - ((v - 100) / curDev) * RPIX;
   let idx = 0, playing = false, timer = null;
   let cellW, xAt, yPrice;
   const heads = new Map();
@@ -74,7 +81,6 @@
     SECS = d.securities.map((s) => ({ ticker: s.ticker, name: s.name || s.ticker, r: s.rs_ratio, m: s.rs_momentum, q: s.quadrant }));
 
     teardown();
-    makeScales();
     buildChart();
     buildSpy();
     buildHeat();
@@ -100,18 +106,18 @@
     hideTooltip();
   }
 
-  // ── scales ──────────────────────────────────────────────────────────────
-  function makeScales() {
-    let dev = 2.5;
-    for (const s of SECS) for (let t = 0; t <= T; t++) {
-      if (s.r[t] != null) dev = Math.max(dev, Math.abs(s.r[t] - 100));
-      if (s.m[t] != null) dev = Math.max(dev, Math.abs(s.m[t] - 100));
+  // ── square auto-fit scale ─────────────────────────────────────────────────
+  // Half-extent that just contains the currently visible points (dots + their
+  // trail window), so the square axes zoom to fit the symbols' spread and
+  // expand proportionally as they fan out — while staying square.
+  function fitDev(c) {
+    let d = MIN_DEV;
+    const start = Math.max(0, c - TRAIL_WEEKS + 1);
+    for (const s of SECS) for (let k = start; k <= c; k++) {
+      if (s.r[k] != null) d = Math.max(d, Math.abs(s.r[k] - 100));
+      if (s.m[k] != null) d = Math.max(d, Math.abs(s.m[k] - 100));
     }
-    dev *= 1.12;
-    const lo = 100 - dev, hi = 100 + dev;
-    sx = (v) => PAD_L + ((v - lo) / (hi - lo)) * PLOT_W;
-    sy = (v) => PAD_T + ((hi - v) / (hi - lo)) * PLOT_H;
-    cxp = sx(100); cyp = sy(100);
+    return d * (1 + DEV_PAD);
   }
 
   // ── RRG chrome + head dots ────────────────────────────────────────────────
@@ -234,6 +240,7 @@
   // ── the one function that moves everything ────────────────────────────────
   function setIndex(c) {
     idx = Math.max(0, Math.min(T, c));
+    curDev = fitDev(idx); // refit the square axes to the current spread
     drawTrails(idx);
 
     for (const s of SECS) {
