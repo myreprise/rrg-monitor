@@ -59,3 +59,62 @@ universes:
       GLD: "Gold"
       DBC: "Broad Commodities"
       VNQ: "US Real Estate"
+
+  factors:
+    label: "Factors & Styles"
+    benchmark: SPY
+    description: "Equity factor and style ETFs, rotated against the S&P 500 — the factor-timing view."
+    tickers: [MTUM, QUAL, VLUE, USMV, IWF, IWD, IWM]
+    names:
+      MTUM: "Momentum"
+      QUAL: "Quality"
+      VLUE: "Value"
+      USMV: "Minimum Volatility"
+      IWF: "Growth (Large-Cap)"
+      IWD: "Value (Large-Cap)"
+      IWM: "Small-Cap"
+
+  regions:
+    label: "Global Regions"
+    benchmark: ACWI
+    description: "Country and regional equity markets, rotated against global equities (ACWI)."
+    tickers: [SPY, VGK, EWJ, EEM, MCHI, INDA, EWZ, EWU]
+    names:
+      SPY: "United States"
+      VGK: "Europe"
+      EWJ: "Japan"
+      EEM: "Emerging Markets"
+      MCHI: "China"
+      INDA: "India"
+      EWZ: "Brazil"
+      EWU: "United Kingdom"
+
+  fixed_income:
+    label: "Fixed Income"
+    benchmark: AGG
+    description: "Treasury duration and credit sectors, rotated against the US Aggregate bond index (AGG)."
+    tickers: [SHY, IEF, TLT, TIP, LQD, HYG, EMB, MBB, BKLN]
+    names:
+      SHY: "1-3Y Treasuries"
+      IEF: "7-10Y Treasuries"
+      TLT: "20+Y Treasuries"
+      TIP: "TIPS"
+      LQD: "IG Corporates"
+      HYG: "High Yield"
+      EMB: "EM Bonds"
+      MBB: "Mortgage-Backed"
+      BKLN: "Bank Loans"
+
+  commodities:
+    label: "Commodities"
+    benchmark: DBC
+    description: "Major commodities, rotated against a broad commodity index (DBC) — the real-asset view."
+    tickers: [GLD, SLV, USO, UNG, DBA, DBB, URA]
+    names:
+      GLD: "Gold"
+      SLV: "Silver"
+      USO: "Crude Oil"
+      UNG: "Natural Gas"
+      DBA: "Agriculture"
+      DBB: "Base Metals"
+      URA: "Uranium"
