@@ -19,6 +19,11 @@
     Weakening: "#d29922", Lagging: "#f85149", unknown: "#8b949e",
   };
 
+  // Friendly names for the benchmark index shown on the price strip.
+  const BENCH_NAMES = {
+    SPY: "S&P 500", ACWI: "MSCI ACWI", AGG: "US Aggregate Bond", DBC: "Broad Commodities",
+  };
+
   const VB = 560, PAD_L = 60, PAD_R = 26, PAD_T = 22, PAD_B = 50;
   const PLOT_W = VB - PAD_L - PAD_R, PLOT_H = VB - PAD_T - PAD_B;
   const STRIP_W = 920, S_L = 48, S_R = 16, STRIP_PLOT = STRIP_W - S_L - S_R;
@@ -210,6 +215,13 @@
     let d = "";
     for (let t = 0; t <= T; t++) { if (closes[t] == null) continue; d += (d ? "L" : "M") + xAt(t).toFixed(1) + " " + yPrice(closes[t]).toFixed(1) + " "; }
     el("path", { d: d.trim(), class: "spy-line" }, svg);
+    // direct label at the line's left end, so it reads as the benchmark index
+    let f = 0; while (f <= T && closes[f] == null) f++;
+    if (f <= T) {
+      const ly = Math.min(Math.max(yPrice(closes[f]) - 7, S_T + 10), H - S_B - 2);
+      const tag = el("text", { x: xAt(f) + 5, y: ly, class: "spy-tag" }, svg);
+      tag.textContent = DATA.universe.benchmark;
+    }
     spyPlayhead = el("line", { y1: S_T - 3, y2: H - S_B, class: "playhead" }, svg);
     spyMarker = el("circle", { r: 4, class: "spy-marker" }, svg);
     enableScrub(svg);
@@ -285,6 +297,8 @@
       `<span class="chip regime-${regime}"><span class="swatch"></span>${cap}</span>` +
       `<span class="chip">as of <strong>${DATES[idx]}</strong></span>`;
     byId("chart-note").textContent = `${DATA.universe.benchmark} at center (100, 100)`;
+    const bench = DATA.universe.benchmark, bn = BENCH_NAMES[bench];
+    byId("spy-title").innerHTML = `Benchmark index — <strong>${bench}</strong>` + (bn ? ` · ${bn}` : "");
   }
 
   function renderStandings() {
