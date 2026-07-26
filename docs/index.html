@@ -18,8 +18,18 @@
           <p class="tagline">Relative Rotation Graph — where capital is rotating</p>
         </div>
       </div>
-      <div class="meta" id="meta"><!-- universe · benchmark · regime · as-of (filled by JS) --></div>
+      <div class="top-controls">
+        <div class="select-wrap">
+          <select id="universe" aria-label="Select universe">
+            <option value="sectors">SPDR Sectors</option>
+            <option value="mag7">Magnificent 7</option>
+            <option value="global">Global / Asset Classes</option>
+          </select>
+        </div>
+        <button id="theme-toggle" class="icon-btn" aria-label="Toggle light or dark theme" title="Toggle theme">🌙</button>
+      </div>
     </header>
+    <div class="meta" id="meta"><!-- universe · benchmark · regime · as-of (filled by JS) --></div>
 
     <p id="status" class="status" role="status">Loading rotation data…</p>
 
@@ -72,6 +82,18 @@
       <span class="legend-item"><i data-q="Lagging"></i>Lagging</span>
       <span class="legend-hint">Color = quadrant · position &amp; label = identity</span>
     </div>
+
+    <details class="methodology">
+      <summary>Methodology &amp; data</summary>
+      <div class="method-body">
+        <p><strong>RS line</strong> = security close ÷ benchmark close (weekly).
+        <strong>JdK RS-Ratio</strong> normalizes that line against its own 52-week EMA (×100) — where a security sits versus the benchmark.
+        <strong>JdK RS-Momentum</strong> is a smoothed 4-week rate-of-change of RS-Ratio (×100) — how fast that standing is changing. Both center on 100.</p>
+        <p><strong>Quadrants</strong> follow the two axes: Leading (strong &amp; rising), Weakening (strong &amp; falling), Lagging (weak &amp; falling), Improving (weak &amp; rising). Capital typically rotates clockwise.</p>
+        <p><strong>Regime shading</strong> on the price strip is a transparent proxy from the benchmark's own weekly closes: <em>bear</em> at ≤ −20% drawdown from the trailing peak, <em>correction</em> at ≤ −8% or below the 40-week average, otherwise <em>bull</em>.</p>
+        <p>Data via Yahoo Finance, weekly bars over ~3 years, refreshed every Friday. Open source — <a href="https://github.com/myreprise/rrg-monitor" target="_blank" rel="noopener">source on GitHub</a>.</p>
+      </div>
+    </details>
 
     <footer class="footer">
       <p><strong>How to read it:</strong> the horizontal axis is relative <em>strength</em> (JdK RS-Ratio),

@@ -19,6 +19,23 @@
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
+/* Light theme — quadrant colors stay fixed (they encode data); only surfaces flip. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --bg: #f6f8fa; --surface: #ffffff; --surface-2: #eef1f4;
+    --line: #d0d7de; --line-soft: #e4e8ec;
+    --ink: #1f2328; --muted: #59636e; --faint: #838d97; --accent: #0969da;
+  }
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f6f8fa; --surface: #ffffff; --surface-2: #eef1f4;
+  --line: #d0d7de; --line-soft: #e4e8ec;
+  --ink: #1f2328; --muted: #59636e; --faint: #838d97; --accent: #0969da;
+}
+:root[data-theme="dark"] { color-scheme: dark; }
+
 * { box-sizing: border-box; }
 
 body {
@@ -90,8 +107,8 @@ body {
 /* Chart */
 .chart-wrap { position: relative; }
 #rrg { width: 100%; height: auto; display: block; touch-action: none; }
-.rrg-dot { cursor: pointer; transition: cx .45s linear, cy .45s linear, r .12s ease, fill .3s ease; }
-.rrg-label { font-size: 11px; font-weight: 600; fill: var(--ink); pointer-events: none; transition: x .45s linear, y .45s linear; }
+.rrg-dot { cursor: pointer; stroke: var(--bg); stroke-width: 1.5; transition: cx .45s linear, cy .45s linear, r .12s ease, fill .3s ease; }
+.rrg-label { font-size: 11px; font-weight: 600; fill: var(--ink); pointer-events: none; paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; transition: x .45s linear, y .45s linear; }
 .no-anim .rrg-dot, .no-anim .rrg-label { transition: none; }
 .quad-label { font-size: 10.5px; font-weight: 700; letter-spacing: .04em; }
 .axis-title { font-size: 11px; fill: var(--muted); }
@@ -175,3 +192,38 @@ body {
 .footer p { margin: 0 0 8px; max-width: 70ch; }
 .footer em { color: var(--ink); font-style: normal; }
 .footer .disclaimer { color: var(--faint); font-size: 11.5px; }
+
+/* Top controls: universe select + theme toggle */
+.top-controls { display: flex; align-items: center; gap: 8px; }
+.select-wrap { position: relative; }
+.select-wrap::after {
+  content: "▾"; position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  pointer-events: none; color: var(--muted); font-size: 11px;
+}
+#universe {
+  appearance: none; -webkit-appearance: none;
+  background: var(--surface); color: var(--ink); border: 1px solid var(--line);
+  border-radius: 8px; padding: 7px 28px 7px 12px; font: inherit; font-size: 13px;
+  cursor: pointer;
+}
+#universe:hover { border-color: var(--muted); }
+.icon-btn {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  width: 34px; height: 34px; cursor: pointer; font-size: 15px; line-height: 1;
+  display: grid; place-items: center; color: var(--ink);
+}
+.icon-btn:hover { border-color: var(--muted); }
+
+/* Methodology panel */
+.methodology { margin-top: 24px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.methodology summary { cursor: pointer; padding: 12px 16px; font-size: 13px; font-weight: 600; list-style: none; }
+.methodology summary::-webkit-details-marker { display: none; }
+.methodology summary::before { content: "▸ "; color: var(--muted); }
+.methodology[open] summary::before { content: "▾ "; }
+.method-body { padding: 0 16px 14px; color: var(--muted); font-size: 12.5px; }
+.method-body p { margin: 0 0 9px; max-width: 78ch; }
+.method-body strong, .method-body em { color: var(--ink); font-style: normal; }
+.method-body a { color: var(--accent); }
+
+/* Fade the whole board while switching universes */
+.switching .layout, .switching .timeline-card { opacity: .35; transition: opacity .12s ease; }
